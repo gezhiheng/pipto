@@ -25,7 +25,7 @@ export function ColorSettingSection ({
   return (
     <div className='space-y-3'>
       <p className='text-sm font-semibold text-ink-700'>{title}</p>
-      <div className='grid grid-cols-[auto,1fr] items-center gap-3 rounded-xl border border-ink-200 bg-white/70 p-3'>
+      <div className='grid gap-3 rounded-xl border border-ink-200 bg-white/70 p-3 sm:grid-cols-[auto,1fr] sm:items-center'>
         <label className='relative h-10 w-10 shrink-0 cursor-pointer'>
           <input
             type='color'
@@ -40,7 +40,7 @@ export function ColorSettingSection ({
             style={{ backgroundColor: pickerColor }}
           />
         </label>
-        <div className='flex flex-wrap items-center gap-3'>
+        <div className='flex flex-col items-start gap-3 sm:flex-row sm:flex-wrap sm:items-center'>
           <input
             type='text'
             value={value}
@@ -48,7 +48,7 @@ export function ColorSettingSection ({
               onChange(event.target.value)
             }
             onBlur={handleTextBlur}
-            className='h-10 w-[160px] rounded-lg border border-ink-200 bg-white px-3 text-sm font-medium text-ink-800'
+            className='h-10 w-full rounded-lg border border-ink-200 bg-white px-3 text-sm font-medium text-ink-800 sm:w-[160px]'
           />
           <span className='text-xs text-ink-500'>{helperText}</span>
         </div>

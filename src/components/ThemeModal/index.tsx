@@ -205,20 +205,20 @@ export function ThemeModal ({
   }
 
   return (
-    <div className='fixed inset-0 z-50 flex items-center justify-center'>
+    <div className='fixed inset-0 z-50 flex items-start justify-center overflow-y-auto px-3 py-3 sm:items-center sm:px-4 sm:py-4'>
       <div
         className='absolute inset-0 bg-ink-900/40 backdrop-blur-sm'
         onClick={onClose}
       />
-      <div className='relative my-4 flex max-h-[90vh] w-[min(80vw,860px)] flex-col overflow-hidden rounded-2xl border border-white/70 bg-white/95 shadow-2xl'>
-        <div className='sticky top-0 z-10 flex items-center justify-between border-b border-ink-100 bg-white/90 px-6 py-4 backdrop-blur'>
+      <div className='relative my-0 flex max-h-[calc(100dvh-1.5rem)] w-full max-w-[860px] flex-col overflow-hidden rounded-2xl border border-white/70 bg-white/95 shadow-2xl sm:my-4 sm:max-h-[90vh]'>
+        <div className='sticky top-0 z-10 flex items-center justify-between border-b border-ink-100 bg-white/90 px-4 py-3 backdrop-blur sm:px-6 sm:py-4'>
           <div>
-            <h2 className='mt-1 font-display text-2xl text-ink-900'>
+            <h2 className='mt-1 font-display text-xl text-ink-900 sm:text-2xl'>
               Custom PPTX
             </h2>
           </div>
           <button
-            className='rounded-full border border-ink-200 p-2 text-ink-600 transition hover:bg-ink-50'
+            className='rounded-full border border-ink-200 p-1.5 text-ink-600 transition hover:bg-ink-50 sm:p-2'
             onClick={onClose}
             type='button'
           >
@@ -226,8 +226,8 @@ export function ThemeModal ({
           </button>
         </div>
 
-        <div className='min-h-0 flex-1 overflow-y-auto px-6 py-6'>
-          <div className='space-y-8'>
+        <div className='min-h-0 flex-1 overflow-y-auto px-4 py-4 sm:px-6 sm:py-6'>
+          <div className='space-y-6 sm:space-y-8'>
             <MediaSettingsSection
               backgroundFileInputRef={backgroundFileInputRef}
               logoFileInputRef={logoFileInputRef}
@@ -290,7 +290,7 @@ export function ThemeModal ({
           </div>
         </div>
 
-        <div className='sticky bottom-0 z-10 flex flex-wrap items-center justify-end gap-3 border-t border-ink-100 bg-white/90 px-6 py-4 backdrop-blur'>
+        <div className='sticky bottom-0 z-10 flex flex-wrap items-center justify-end gap-2 border-t border-ink-100 bg-white/90 px-4 py-3 backdrop-blur sm:gap-3 sm:px-6 sm:py-4'>
           <Button variant='ghost' onClick={onClose}>
             Cancel
           </Button>

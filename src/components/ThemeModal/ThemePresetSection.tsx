@@ -29,7 +29,7 @@ export function ThemePresetSection ({
 }: ThemePresetSectionProps): JSX.Element {
   return (
     <div className='space-y-4'>
-      <div className='flex items-center justify-between'>
+      <div className='flex flex-wrap items-center justify-between gap-2'>
         <p className='text-sm font-semibold text-ink-700'>Default Theme Sets</p>
         <span className='text-xs text-ink-500'>Click a set to apply</span>
       </div>

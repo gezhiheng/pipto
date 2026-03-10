@@ -102,7 +102,7 @@ export function EditorPanel ({
   }
 
   return (
-    <section className='h-full flex min-h-0 flex-col rounded-xl border border-white/70 bg-white/80 p-5 shadow-soft backdrop-blur'>
+    <section className='flex h-full min-h-0 flex-col rounded-xl border border-white/70 bg-white/80 p-3 shadow-soft backdrop-blur sm:p-4 lg:p-5'>
       <input
         type='file'
         ref={fileInputRef}
@@ -117,9 +117,9 @@ export function EditorPanel ({
         accept='.txt,text/plain'
         onChange={handleCustomContentFileChange}
       />
-      <div className='flex items-center justify-between'>
+      <div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
         <h2 className='font-display text-lg text-ink-900'>JSON Editor</h2>
-        <div className='flex items-center gap-2'>
+        <div className='flex flex-wrap items-center gap-2'>
           <Button
             variant='secondary'
             size='sm'
@@ -174,7 +174,7 @@ export function EditorPanel ({
           )}
         </div>
       </div>
-      <div className='mt-4 h-full overflow-hidden rounded-lg border border-ink-200 bg-white'>
+      <div className='mt-3 h-full overflow-hidden rounded-lg border border-ink-200 bg-white sm:mt-4'>
         <Editor
           height='100%'
           defaultLanguage='json'

@@ -62,3 +62,12 @@ body::before {
   background: rgba(47, 38, 30, 0.35);
   border-radius: 999px;
 }
+
+@media (max-width: 640px) {
+  .monaco-editor .find-widget {
+    left: 12px !important;
+    right: 12px !important;
+    width: auto !important;
+    max-width: none !important;
+  }
+}

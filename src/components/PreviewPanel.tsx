@@ -117,12 +117,14 @@ function SlideCard ({
           </span>
           {slide.id && (
             <button
-              className='group inline-flex items-center gap-1.5 rounded border border-transparent px-1.5 py-0.5 font-mono text-xs normal-case tracking-normal text-ink-400 transition-colors hover:border-ink-200 hover:bg-ink-100 hover:text-ink-700'
+              className='group inline-flex max-w-full items-center gap-1.5 rounded border border-transparent px-1.5 py-0.5 font-mono text-xs normal-case tracking-normal text-ink-400 transition-colors hover:border-ink-200 hover:bg-ink-100 hover:text-ink-700'
               onClick={handleCopyId}
               title='Click to copy slide ID'
               aria-label='Copy slide ID'
             >
-              <span>{slide.id}</span>
+              <span className='max-w-[140px] truncate sm:max-w-[220px]'>
+                {slide.id}
+              </span>
               {copied ? (
                 <Check className='h-3 w-3' />
               ) : (
@@ -165,6 +167,7 @@ export function PreviewPanel ({
   const fileInputRef = useRef<HTMLInputElement>(null)
   const toolButtonClass =
     'h-8 px-2 text-ink-600 hover:text-ink-900 disabled:text-ink-400'
+  const showTwoColumns = isGrid && previewWidth >= 640
 
   function handleUploadClick (): void {
     fileInputRef.current?.click()
@@ -180,10 +183,10 @@ export function PreviewPanel ({
   return (
     <section
       ref={previewRef}
-      className='h-full preview-scroll flex min-h-0 flex-col gap-6 overflow-y-auto overflow-x-hidden rounded-xl border border-white/70 bg-white/80 px-6 pb-6 pt-0 shadow-soft backdrop-blur'
+      className='preview-scroll flex h-full min-h-0 flex-col gap-4 overflow-x-hidden overflow-y-auto rounded-xl border border-white/70 bg-white/80 px-3 pb-3 pt-0 shadow-soft backdrop-blur sm:gap-6 sm:px-6 sm:pb-6'
     >
-      <div className='sticky top-0 z-10 -mx-6 flex items-center justify-between bg-white px-6 pb-4 pt-6'>
-        <div className='flex items-center gap-2'>
+      <div className='sticky top-0 z-10 -mx-3 flex flex-col gap-3 bg-white px-3 pb-3 pt-4 sm:-mx-6 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:pb-4 sm:pt-6'>
+        <div className='flex flex-wrap items-center gap-2'>
           <h2 className='font-display text-lg text-ink-900'>Slide Preview</h2>
           <div className='flex items-center gap-1 rounded-lg border border-ink-100 bg-ink-50 p-1'>
             <Button
@@ -269,14 +272,14 @@ export function PreviewPanel ({
           Fix the JSON to see slide previews.
         </div>
       )}
-      <div className={cn('grid gap-6', isGrid ? 'grid-cols-2' : 'grid-cols-1')}>
+      <div className={cn('grid gap-6', showTwoColumns ? 'grid-cols-2' : 'grid-cols-1')}>
         {deck?.slides?.map((slide: Slide, index: number) => (
           <SlideCard
             key={`${slide.id ?? 'slide'}-${index}`}
             slide={slide}
             baseWidth={slideWidth}
             baseHeight={slideHeight}
-            previewWidth={isGrid ? (previewWidth - 24) / 2 : previewWidth}
+            previewWidth={showTwoColumns ? (previewWidth - 24) / 2 : previewWidth}
             index={index}
             themeBackground={themeBackground}
           />

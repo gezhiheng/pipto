@@ -105,17 +105,17 @@ export function HeaderBar ({
 
   return (
     <>
-      <header className='flex flex-row justify-between rounded-xl border border-white/70 bg-white/70 p-6 shadow-soft backdrop-blur'>
+      <header className='flex flex-col gap-4 rounded-xl border border-white/70 bg-white/70 p-4 shadow-soft backdrop-blur sm:p-5 lg:flex-row lg:items-start lg:justify-between lg:p-6'>
         <div className='flex flex-col gap-2'>
-          <h1 className='font-display text-3xl text-ink-900 md:text-4xl'>
+          <h1 className='font-display text-2xl leading-tight text-ink-900 sm:text-3xl lg:text-4xl'>
             Live JSON <span className='text-ember-500'>to</span> PPTX editor
           </h1>
         </div>
-        <div className='flex flex-wrap items-center gap-3'>
+        <div className='flex w-full flex-wrap items-center gap-2 sm:gap-3 lg:w-auto lg:justify-end'>
           <Button
             onClick={openThemeModal}
             variant='secondary'
-            className={cn('gap-2', commonTriggerClass)}
+            className={cn('w-full justify-center gap-2 sm:w-auto', commonTriggerClass)}
             disabled={isThemeDisabled}
             title='Open theme settings'
             aria-label='Open theme settings'
@@ -125,7 +125,7 @@ export function HeaderBar ({
           </Button>
           <Select value={selectedTemplateId} onValueChange={onTemplateChange}>
             <SelectTrigger
-              className={cn('tracking-wider', commonTriggerClass)}
+              className={cn('w-full tracking-wider sm:w-auto', commonTriggerClass)}
               title='Choose a template'
               aria-label='Choose a template'
             >

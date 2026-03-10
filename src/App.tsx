@@ -18,6 +18,8 @@ import type { Deck } from './types/ppt'
 
 const MIN_PREVIEW_WIDTH = 320
 const PREVIEW_GUTTER = 48
+const MOBILE_PREVIEW_GUTTER = 24
+const MOBILE_LAYOUT_QUERY = '(max-width: 1023px)'
 
 function safeParse (value: string): { data: Deck | null; error: string } {
   try {
@@ -121,6 +123,10 @@ export default function App (): JSX.Element {
   const [isExporting, setIsExporting] = useState(false)
   const [isImporting, setIsImporting] = useState(false)
   const [previewWidth, setPreviewWidth] = useState(720)
+  const [isMobileLayout, setIsMobileLayout] = useState(() => {
+    if (typeof window === 'undefined') return false
+    return window.matchMedia(MOBILE_LAYOUT_QUERY).matches
+  })
   const [selectedTemplateId, setSelectedTemplateId] = useState(
     initialTemplate?.id ?? ''
   )
@@ -147,6 +153,22 @@ export default function App (): JSX.Element {
     () => getTemplateOrFallback(selectedTemplateId),
     [selectedTemplateId]
   )
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+
+    const media = window.matchMedia(MOBILE_LAYOUT_QUERY)
+    const syncLayoutMode = () => setIsMobileLayout(media.matches)
+    syncLayoutMode()
+
+    if (typeof media.addEventListener === 'function') {
+      media.addEventListener('change', syncLayoutMode)
+      return () => media.removeEventListener('change', syncLayoutMode)
+    }
+
+    media.addListener(syncLayoutMode)
+    return () => media.removeListener(syncLayoutMode)
+  }, [])
 
   function applyTemplate (templateId: string): void {
     const template = getTemplateOrFallback(templateId)
@@ -179,9 +201,10 @@ export default function App (): JSX.Element {
     function updateWidth (): void {
       if (!previewRef.current) return
       const containerWidth = previewRef.current.clientWidth
+      const gutter = isMobileLayout ? MOBILE_PREVIEW_GUTTER : PREVIEW_GUTTER
       const availableWidth = Math.max(
         MIN_PREVIEW_WIDTH,
-        containerWidth - PREVIEW_GUTTER
+        containerWidth - gutter
       )
       setPreviewWidth(Math.min(slideWidth, availableWidth))
     }
@@ -201,7 +224,7 @@ export default function App (): JSX.Element {
       observer.disconnect()
       window.removeEventListener('resize', updateWidth)
     }
-  }, [slideWidth])
+  }, [slideWidth, isMobileLayout])
 
   useEffect(() => {
     if (!deck || parsed.error) return
@@ -232,6 +255,10 @@ export default function App (): JSX.Element {
 
   // Handle Split Resizing
   useEffect(() => {
+    if (isMobileLayout) {
+      if (isResizing) setIsResizing(false)
+      return
+    }
     if (!isResizing) return
 
     function handleMouseMove (e: MouseEvent) {
@@ -257,7 +284,7 @@ export default function App (): JSX.Element {
       document.body.style.cursor = ''
       document.body.style.userSelect = ''
     }
-  }, [isResizing])
+  }, [isMobileLayout, isResizing])
 
   async function handleExportPptx (): Promise<void> {
     const current = safeParse(jsonText)
@@ -333,8 +360,8 @@ export default function App (): JSX.Element {
   }
 
   return (
-    <div className='h-screen px-6 py-6'>
-      <div className='mx-auto flex h-full flex-col gap-6'>
+    <div className='min-h-screen px-3 py-3 sm:px-4 sm:py-4 lg:h-screen lg:px-6 lg:py-6'>
+      <div className='mx-auto flex h-full min-h-0 flex-col gap-3 sm:gap-4 lg:gap-6'>
         <HeaderBar
           deck={deck}
           templates={templateList}
@@ -349,11 +376,17 @@ export default function App (): JSX.Element {
 
         <main
           ref={containerRef}
-          className='flex flex-1 min-h-0 overflow-hidden'
+          className={`flex flex-1 min-h-0 ${
+            isMobileLayout
+              ? 'flex-col gap-4 overflow-y-auto overflow-x-hidden'
+              : 'overflow-hidden'
+          }`}
         >
           <div
-            style={{ width: `${editorWidthPercent}%` }}
-            className='flex h-full min-w-0 flex-col'
+            style={isMobileLayout ? undefined : { width: `${editorWidthPercent}%` }}
+            className={`flex min-w-0 flex-col ${
+              isMobileLayout ? 'h-[55vh] min-h-[320px]' : 'h-full'
+            }`}
           >
             <EditorPanel
               value={jsonText}
@@ -363,21 +396,26 @@ export default function App (): JSX.Element {
             />
           </div>
 
-          {/* Resizer Handle */}
-          <div
-            className='group relative z-10 flex w-6 flex-shrink-0 cursor-col-resize items-center justify-center hover:bg-black/5'
-            onMouseDown={() => setIsResizing(true)}
-            title='Drag to resize editor and preview panels'
-            aria-label='Drag to resize editor and preview panels'
-          >
+          {!isMobileLayout && (
             <div
-              className={`h-8 w-1 rounded-full ${
-                isResizing ? 'bg-ember-500' : 'bg-ink-200'
-              } transition-colors group-hover:bg-ember-500`}
-            />
-          </div>
+              className='group relative z-10 flex w-6 flex-shrink-0 cursor-col-resize items-center justify-center hover:bg-black/5'
+              onMouseDown={() => setIsResizing(true)}
+              title='Drag to resize editor and preview panels'
+              aria-label='Drag to resize editor and preview panels'
+            >
+              <div
+                className={`h-8 w-1 rounded-full ${
+                  isResizing ? 'bg-ember-500' : 'bg-ink-200'
+                } transition-colors group-hover:bg-ember-500`}
+              />
+            </div>
+          )}
 
-          <div className='flex h-full min-w-0 flex-1 flex-col'>
+          <div
+            className={`flex min-w-0 flex-1 flex-col ${
+              isMobileLayout ? 'min-h-[320px]' : 'h-full'
+            }`}
+          >
             <PreviewPanel
               deck={normalizedDeck}
               slideWidth={slideWidth}

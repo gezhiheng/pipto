@@ -53,10 +53,10 @@ export function MediaSettingsSection ({
   onLogoPositionChange
 }: MediaSettingsSectionProps): JSX.Element {
   return (
-    <div className='flex gap-4 flex-row'>
-      <div className='flex flex-1 min-w-0 flex-col gap-2.5'>
+    <div className='flex flex-col gap-6 xl:flex-row xl:gap-4'>
+      <div className='flex min-w-0 flex-1 flex-col gap-2.5'>
         <p className='text-sm font-semibold text-ink-800'>Background:</p>
-        <div className='max-w-[680px] space-y-2.5'>
+        <div className='w-full max-w-[680px] space-y-2.5'>
           <input
             type='file'
             ref={backgroundFileInputRef}
@@ -105,9 +105,9 @@ export function MediaSettingsSection ({
         </div>
       </div>
 
-      <div className='flex flex-1 min-w-0 flex-col gap-2.5'>
+      <div className='flex min-w-0 flex-1 flex-col gap-2.5'>
         <p className='text-sm font-semibold text-ink-800'>Logo:</p>
-        <div className='max-w-[680px] space-y-2.5'>
+        <div className='w-full max-w-[680px] space-y-2.5'>
           <input
             type='file'
             ref={logoFileInputRef}
@@ -153,7 +153,7 @@ export function MediaSettingsSection ({
             onToggleScope={onLogoScopeChange}
           />
 
-          <div className='flex flex-wrap items-center gap-5 pt-0.5'>
+          <div className='flex flex-wrap items-center gap-3 pt-0.5 sm:gap-5'>
             <label className='inline-flex items-center gap-2 text-xs font-medium text-ink-700'>
               <input
                 type='radio'
