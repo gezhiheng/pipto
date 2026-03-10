@@ -8,20 +8,42 @@ import {
 } from './color-utils'
 import type { ColorMapping } from './types'
 
+function applyColorToStyleAttribute (
+  styles: string,
+  color: string
+): string {
+  const declarations = styles
+    .split(';')
+    .map(item => item.trim())
+    .filter(Boolean)
+
+  let updated = false
+  const nextDeclarations = declarations.map((declaration) => {
+    const separatorIndex = declaration.indexOf(':')
+    if (separatorIndex < 0) return declaration
+
+    const property = declaration.slice(0, separatorIndex).trim().toLowerCase()
+    if (property !== 'color') return declaration
+
+    updated = true
+    return `color: ${color}`
+  })
+
+  if (!updated) {
+    nextDeclarations.push(`color: ${color}`)
+  }
+
+  return nextDeclarations.join('; ')
+}
+
 function applyFontColorToHtml (value: string, fontColor: string): string {
   if (!value || !fontColor) return value
   const normalized = normalizeThemeColor(fontColor) ?? fontColor
-  const hasStyleColor = /\bcolor\s*:/i.test(value)
-  if (hasStyleColor) {
-    return value.replace(/color\s*:\s*([^;"']+)/gi, () => `color: ${normalized}`)
-  }
+
   return value.replace(
     /(<[^>]+style\s*=\s*["'])([^"']*)(["'])/gi,
-    (_match, start, styles, end) => {
-      if (/\bcolor\s*:/i.test(styles)) return _match
-      const nextStyles = styles.trim()
-        ? `${styles.trim()}; color: ${normalized}`
-        : `color: ${normalized}`
+    (_match, start, styles, end): string => {
+      const nextStyles = applyColorToStyleAttribute(styles, normalized)
       return `${start}${nextStyles}${end}`
     }
   )
