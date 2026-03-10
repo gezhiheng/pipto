@@ -1,31 +1,31 @@
 # pptx-custom
 
-[中文文档](./README.zh-CN.md)
+[English](./README.md)
 
-Utilities for customizing `json2pptx` JSON decks in two stages:
+用于对 `json2pptx` JSON deck 进行两阶段定制：
 
-- Content stage: map backend slide content into a template deck.
-- Theme stage: replace theme colors/font/background and apply scoped media.
+- 内容阶段：将后端内容映射到模板 deck。
+- 主题阶段：替换主题色/字体/背景，并按范围应用媒体资源。
 
-## Install
+## 安装
 
 ```bash
 npm i pptx-custom
 ```
 
-## Exports
+## 导出 API
 
 - `applyCustomContent(template, input)`
 - `parseCustomContent(raw)`
 - `applyCustomContentToTemplate(template, slides)`
 - `applyCustomTheme(deck, themeInput)`
 
-Types are also exported, including:
-`CustomSlide`, `Deck`, `PptxCustomContentInput`, `PptxCustomThemeInput`,
-`PptxCustomOptions`, `TemplateJson`, `TemplateJsonSlide`, `TemplateJsonElement`,
-`TemplateJsonTheme`.
+同时导出类型，包括：
+`CustomSlide`、`Deck`、`PptxCustomContentInput`、`PptxCustomThemeInput`、
+`PptxCustomOptions`、`TemplateJson`、`TemplateJsonSlide`、`TemplateJsonElement`、
+`TemplateJsonTheme`。
 
-## Quick Start
+## 快速开始
 
 ```ts
 import {
@@ -68,16 +68,16 @@ const slides = parseCustomContent(backendText)
 const withContentDirect = applyCustomContentToTemplate(templateDeck, slides)
 ```
 
-## Custom Content Input
+## 自定义内容输入格式
 
-`parseCustomContent` and `applyCustomContent` support:
+`parseCustomContent` 和 `applyCustomContent` 支持：
 
-1. NDJSON (one slide per line)
-2. JSON array of slides
-3. JSON object with a `slides` array
-4. JSON object containing a single slide (with `type`)
+1. NDJSON（每行一个 slide）
+2. JSON slide 数组
+3. 带 `slides` 字段的 JSON 对象
+4. 单个 slide JSON 对象（包含 `type`）
 
-Supported slide types:
+支持的 slide 类型：
 
 - `cover`
 - `contents`
@@ -85,13 +85,13 @@ Supported slide types:
 - `content`
 - `end`
 
-Legacy aliases accepted in input:
+兼容的历史别名：
 
 - `agenda` -> `contents`
 - `section` -> `transition`
 - `ending` -> `end`
 
-Example NDJSON:
+NDJSON 示例：
 
 ```json
 {"type":"cover","data":{"title":"Title","text":"Subtitle"}}
@@ -101,11 +101,11 @@ Example NDJSON:
 {"type":"end"}
 ```
 
-## Theme Input
+## 主题输入
 
-`applyCustomTheme` accepts `PptxCustomThemeInput`:
+`applyCustomTheme` 接收 `PptxCustomThemeInput`：
 
-- `themeColors: string[]` (uses first 6)
+- `themeColors: string[]`（最多使用前 6 个）
 - `fontColor: string`
 - `backgroundColor?: string`
 - `backgroundImage?: { src, scope, width?, height? }`
@@ -113,19 +113,19 @@ Example NDJSON:
 - `clearBackgroundImage?: boolean`
 - `clearLogoImage?: boolean`
 
-`scope` keys:
+`scope` 可选键：
 `cover | contents | transition | content | end`
 
-## Behavior Notes
+## 行为说明
 
-- Both `applyCustomContent` and `applyCustomTheme` run through `json2pptx-schema`
-  parsing/normalization before returning.
-- `applyCustomContent` selects template slides by `type`, and for `contents/content`
-  prefers layouts with the closest capacity to the requested item count.
-- `applyCustomContent` normalizes logo elements (`imageType: "logo"`) to stay within
-  top margins and removes logo clipping.
-- `applyCustomTheme` inserts scoped background images as slide elements with
-  `imageType: "background"` and logo images with `imageType: "logo"`.
-- When both `backgroundImage` and `backgroundColor` are provided, background color is
-  applied as a 50% alpha overlay color on targeted slides.
-- `clearBackgroundImage` also clears logo images in current behavior.
+- `applyCustomContent` 与 `applyCustomTheme` 都会在返回前经过
+  `json2pptx-schema` 的解析与规范化。
+- `applyCustomContent` 按 `type` 选模板页；对 `contents/content` 会优先选择
+  与输入条目数容量最接近的布局。
+- `applyCustomContent` 会规范化 logo 元素（`imageType: "logo"`）：
+  保持在顶部边距内，并移除 logo 裁剪配置。
+- `applyCustomTheme` 会将背景图以元素形式写入（`imageType: "background"`），
+  并将 logo 以 `imageType: "logo"` 写入。
+- 当同时提供 `backgroundImage` 与 `backgroundColor` 时，会在目标页应用
+  50% 透明度的背景色叠加效果。
+- 当前行为下，`clearBackgroundImage` 也会同时清除 logo 图片。
