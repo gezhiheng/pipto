@@ -13,7 +13,7 @@ npm i json2pptx
 ```ts
 import { createPPTX } from 'json2pptx'
 
-const deck = {
+const presentation = {
   title: 'Demo',
   width: 1000,
   height: 562.5,
@@ -34,7 +34,7 @@ const deck = {
   ]
 }
 
-const { blob, fileName } = await createPPTX(deck)
+const { blob, fileName } = await createPPTX(presentation)
 // 在浏览器中下载：
 // const url = URL.createObjectURL(blob)
 // const a = document.createElement('a')
@@ -45,7 +45,7 @@ const { blob, fileName } = await createPPTX(deck)
 
 ## API
 
-### `createPPTX(template: Presentation): Promise<{ blob: Blob; fileName: string }>`
+### `createPPTX(presentation: Presentation): Promise<{ blob: Blob; fileName: string }>`
 
 根据 `Presentation` 数据生成 PPTX 的 `Blob` 与建议文件名。输入会先经过
 `json2pptx-schema` 的迁移、校验和规范化流程。

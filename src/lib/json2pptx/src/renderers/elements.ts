@@ -23,7 +23,7 @@ import {
 export function addTextElement(
   slide: PptxGenJS.Slide,
   element: SlideElement,
-  template: Presentation,
+  presentation: Presentation,
   slideIndex: number,
   elementIndex: number,
   ratioPx2Pt: number,
@@ -43,7 +43,8 @@ export function addTextElement(
     w: (element.width ?? 0) / ratioPx2Inch,
     h: (element.height ?? 0) / ratioPx2Inch,
     fontSize: DEFAULT_FONT_SIZE / ratioPx2Pt,
-    fontFace: element.defaultFontName || template.theme?.fontName || DEFAULT_FONT_FACE,
+    fontFace:
+      element.defaultFontName || presentation.theme?.fontName || DEFAULT_FONT_FACE,
     color: "#000000",
     valign: "top",
     // pptxgenjs margin order: [left, right, bottom, top]

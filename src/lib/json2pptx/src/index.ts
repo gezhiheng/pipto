@@ -47,25 +47,25 @@ function parseDataUrlImage(
 }
 
 export async function createPPTX(
-  template: Presentation
+  presentation: Presentation
 ): Promise<{ blob: Blob; fileName: string }> {
-  const parsedTemplate: PresentationDocument = parseDocument(template);
-  const renderTemplate = parsedTemplate as unknown as Presentation;
+  const parsedPresentation: PresentationDocument = parseDocument(presentation);
+  const normalizedPresentation = parsedPresentation as unknown as Presentation;
 
   const pptx = new PptxGenJS();
   const fillPatches: FillPatch[] = [];
 
-  const width = parsedTemplate.width;
-  const height = parsedTemplate.height;
+  const width = parsedPresentation.width;
+  const height = parsedPresentation.height;
   const ratioPx2Inch = 96 * (width / 960);
   const ratioPx2Pt = (96 / 72) * (width / 960);
   const textPadding = 10 / ratioPx2Pt;
 
   applyPptxLayout(pptx, width, height);
 
-  for (const [slideIndex, slideJson] of (renderTemplate.slides ?? []).entries()) {
+  for (const [slideIndex, slideJson] of (normalizedPresentation.slides ?? []).entries()) {
     const slide = pptx.addSlide();
-    applySlideBackground(slide, slideJson, renderTemplate.theme);
+    applySlideBackground(slide, slideJson, normalizedPresentation.theme);
     if (slideJson.background && fillRequiresXmlPatch(slideJson.background)) {
       fillPatches.push({
         kind: "background",
@@ -78,7 +78,7 @@ export async function createPPTX(
       addTextElement(
         slide,
         element,
-        renderTemplate,
+        normalizedPresentation,
         slideIndex,
         elementIndex,
         ratioPx2Pt,
@@ -101,7 +101,7 @@ export async function createPPTX(
     }
   }
 
-  const fileName = `${sanitizeFileName(parsedTemplate.title || "presentation")}.pptx`;
+  const fileName = `${sanitizeFileName(parsedPresentation.title || "presentation")}.pptx`;
   const pptxBuffer = (await pptx.write({
     outputType: "arraybuffer",
     compression: true
