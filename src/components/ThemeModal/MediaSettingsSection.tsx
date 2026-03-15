@@ -16,8 +16,8 @@ const removeMediaButtonClass =
   'absolute right-3 top-3 rounded-full bg-white/90 px-3 py-1 text-sm font-medium text-[#5E708F] shadow-sm backdrop-blur transition hover:bg-white'
 
 type MediaSettingsSectionProps = {
-  backgroundFileInputRef: RefObject<HTMLInputElement>
-  logoFileInputRef: RefObject<HTMLInputElement>
+  backgroundFileInputRef: RefObject<HTMLInputElement | null>
+  logoFileInputRef: RefObject<HTMLInputElement | null>
   backgroundImage: UploadedImage | null
   logoImage: UploadedImage | null
   backgroundScope: MediaScope
@@ -51,7 +51,7 @@ export function MediaSettingsSection ({
   onLogoScopeToggleAll,
   onLogoScopeChange,
   onLogoPositionChange
-}: MediaSettingsSectionProps): JSX.Element {
+}: MediaSettingsSectionProps): React.JSX.Element {
   return (
     <div className='flex flex-col gap-6 xl:flex-row xl:gap-4'>
       <div className='flex min-w-0 flex-1 flex-col gap-2.5'>

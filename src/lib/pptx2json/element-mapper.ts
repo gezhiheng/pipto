@@ -131,7 +131,7 @@ export function mapElement(raw: any): SlideElement | null {
       ...(special ? { special: true } : {}),
       text: hasText
         ? {
-            content: normalizedShapeText,
+            content: normalizedShapeText ?? '',
             align: normalizeVAlign(raw.vAlign) ?? "middle",
             defaultColor: normalizeColor(raw.defaultColor) ?? normalizeColor(raw.color) ?? "#333",
             defaultFontName: raw.fontName ?? "",

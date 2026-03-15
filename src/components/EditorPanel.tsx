@@ -24,7 +24,7 @@ export function EditorPanel ({
   onChange,
   onImportCustomContent,
   onDownload
-}: EditorPanelProps): JSX.Element {
+}: EditorPanelProps): React.JSX.Element {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const customContentInputRef = useRef<HTMLInputElement>(null)
   const toolButtonClass =

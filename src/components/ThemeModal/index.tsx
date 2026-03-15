@@ -31,7 +31,7 @@ export function ThemeModal ({
   jsonError,
   onClose,
   onApply
-}: ThemeModalProps): JSX.Element | null {
+}: ThemeModalProps): React.JSX.Element | null {
   const [themeColors, setThemeColors] = useState<string[]>([])
   const [fontColor, setFontColor] = useState('#333333')
   const [backgroundColor, setBackgroundColor] = useState('#FFFFFF')

@@ -1,15 +1,15 @@
-import type { PresentationData } from "../types/ppt";
+import type { TemplateJson } from "./template-types";
 
 export type TemplateEntry = {
   id: string;
   name: string;
-  data: PresentationData;
+  data: TemplateJson;
 };
 
 const templateModules = import.meta.glob("../../template/*.json", {
   eager: true,
   import: "default"
-}) as Record<string, PresentationData>;
+}) as Record<string, TemplateJson>;
 
 export const templateList: TemplateEntry[] = Object.entries(templateModules)
   .map(([path, data]) => ({

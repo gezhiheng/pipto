@@ -59,7 +59,7 @@ export function HeaderBar ({
   onTemplateChange,
   onResetTemplate,
   onApplyTheme
-}: HeaderBarProps): JSX.Element {
+}: HeaderBarProps): React.JSX.Element {
   const [isThemeOpen, setIsThemeOpen] = useState(false)
   const [themeColors, setThemeColors] = useState<string[]>([])
   const [fontColor, setFontColor] = useState('#333333')

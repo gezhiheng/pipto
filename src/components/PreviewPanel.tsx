@@ -11,7 +11,7 @@ type PreviewPanelProps = {
   slideWidth: number
   slideHeight: number
   previewWidth: number
-  previewRef: RefObject<HTMLDivElement>
+  previewRef: RefObject<HTMLDivElement | null>
   themeBackground?: string
   isImporting: boolean
   isExporting: boolean
@@ -73,7 +73,7 @@ function SlideCard ({
   previewWidth,
   index,
   themeBackground
-}: SlideCardProps): JSX.Element {
+}: SlideCardProps): React.JSX.Element {
   const [copied, setCopied] = useState(false)
   const scale = previewWidth / baseWidth
   const previewHeight = baseHeight * scale
@@ -161,7 +161,7 @@ export function PreviewPanel ({
   isExporting,
   onImportPptx,
   onExportPptx
-}: PreviewPanelProps): JSX.Element {
+}: PreviewPanelProps): React.JSX.Element {
   const [isGrid, setIsGrid] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const toolButtonClass =
@@ -187,7 +187,7 @@ export function PreviewPanel ({
       <div className='sticky top-0 z-10 -mx-3 flex flex-col gap-3 bg-white px-3 pb-3 pt-4 sm:-mx-6 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:pb-4 sm:pt-6'>
         <div className='flex flex-wrap items-center gap-2'>
           <h2 className='font-display text-lg text-ink-900'>Slide Preview</h2>
-          <div className='flex items-center gap-1 rounded-lg border border-ink-100 bg-ink-50 p-1'>
+          <div className='flex items-center gap-1 rounded-lg border border-ink-200 bg-ink-50 p-1'>
             <Button
               variant='ghost'
               size='sm'

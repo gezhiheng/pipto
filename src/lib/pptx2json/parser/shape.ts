@@ -1,7 +1,7 @@
 import { getTextByPathList } from './utils'
 
 export function shapeArc(cX: any, cY: any, rX: any, rY: any, stAng: any, endAng: any, isClose: any) {
-  let dData
+  let dData = ''
   let angle = stAng
   if (endAng >= stAng) {
     while (angle <= endAng) {

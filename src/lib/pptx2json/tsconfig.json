@@ -25,6 +25,7 @@
     "slide-normalizer.ts",
     "element-mapper.ts",
     "parser/parse.ts",
+    "type/**/*.d.ts",
     "tsup.config.ts"
   ]
 }

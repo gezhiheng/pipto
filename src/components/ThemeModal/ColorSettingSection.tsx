@@ -15,7 +15,7 @@ export function ColorSettingSection ({
   fallbackColor,
   helperText,
   onChange
-}: ColorSettingSectionProps): JSX.Element {
+}: ColorSettingSectionProps): React.JSX.Element {
   const pickerColor = normalizePickerColor(value) ?? fallbackColor
 
   function handleTextBlur (event: ChangeEvent<HTMLInputElement>): void {

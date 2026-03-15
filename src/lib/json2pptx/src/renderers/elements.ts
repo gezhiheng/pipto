@@ -213,7 +213,7 @@ export function addShapeElement(
     paraSpaceBefore: 0,
     valign:
       element.text.align === "middle"
-        ? "mid"
+        ? "middle"
         : (element.text.align as PptxGenJS.VAlign),
     fill: { color: "FFFFFF", transparency: 100 },
     fit: "none",

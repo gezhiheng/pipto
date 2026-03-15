@@ -370,8 +370,9 @@ export function getShadowOption(
   }
 
   return {
+    type: "outer",
     color: c.color,
-    transparency: (1 - c.alpha) * 100,
+    opacity: c.alpha,
     blur: (shadow.blur ?? 0) / ratioPx2Pt,
     offset,
     angle

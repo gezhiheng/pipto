@@ -15,7 +15,7 @@ export function ThemeColorsSection ({
   onAddThemeColor,
   onRemoveThemeColor,
   onUpdateThemeColor
-}: ThemeColorsSectionProps): JSX.Element {
+}: ThemeColorsSectionProps): React.JSX.Element {
   return (
     <div className='space-y-4'>
       <div className='flex items-center justify-between'>

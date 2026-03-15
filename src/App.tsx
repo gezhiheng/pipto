@@ -20,6 +20,9 @@ const MIN_PREVIEW_WIDTH = 320
 const PREVIEW_GUTTER = 48
 const MOBILE_PREVIEW_GUTTER = 24
 const MOBILE_LAYOUT_QUERY = '(max-width: 1023px)'
+type PresentationSlide = NonNullable<PresentationData['slides']>[number]
+type ExportPresentation = Parameters<typeof createPPTX>[0]
+type CustomContentTemplate = Parameters<typeof applyCustomContent>[0]
 
 function safeParse (value: string): { data: PresentationData | null; error: string } {
   try {
@@ -72,13 +75,13 @@ function generateSlideId (existing: Set<string>): string {
   return generateSlideId(existing)
 }
 
-function reorderSlideIdFirst (slide: PresentationData['slides'][number], id: string) {
+function reorderSlideIdFirst (slide: PresentationSlide, id: string) {
   const ordered: Record<string, unknown> = { id }
   for (const key of Object.keys(slide)) {
     if (key === 'id') continue
     ordered[key] = (slide as Record<string, unknown>)[key]
   }
-  return ordered as PresentationData['slides'][number]
+  return ordered as PresentationSlide
 }
 
 function ensureSlideIds (deck: PresentationData): { deck: PresentationData; changed: boolean } {
@@ -105,8 +108,9 @@ function collectBlobUrlsFromDeck (deck: PresentationData | null): Set<string> {
   if (!deck?.slides?.length) return urls
 
   for (const slide of deck.slides) {
-    const backgroundSrc = slide.background?.src
-    if (backgroundSrc?.startsWith('blob:')) urls.add(backgroundSrc)
+    if (slide.background?.type === 'image' && slide.background.src?.startsWith('blob:')) {
+      urls.add(slide.background.src)
+    }
 
     for (const element of slide.elements ?? []) {
       const src = element.src
@@ -117,7 +121,7 @@ function collectBlobUrlsFromDeck (deck: PresentationData | null): Set<string> {
   return urls
 }
 
-export default function App (): JSX.Element {
+export default function App (): React.JSX.Element {
   const [jsonText, setJsonText] = useState(initialJson)
   const [customContentText, setCustomContentText] = useState<string | null>(null)
   const [isExporting, setIsExporting] = useState(false)
@@ -298,7 +302,9 @@ export default function App (): JSX.Element {
     }
     setIsExporting(true)
     try {
-      const { blob, fileName } = await createPPTX(normalizedExport.deck)
+      const { blob, fileName } = await createPPTX(
+        normalizedExport.deck as ExportPresentation
+      )
       downloadBlob(blob, fileName)
     } finally {
       setIsExporting(false)
@@ -318,7 +324,10 @@ export default function App (): JSX.Element {
     }
 
     try {
-      const generatedDeck = applyCustomContent(current.data, content)
+      const generatedDeck = applyCustomContent(
+        current.data as CustomContentTemplate,
+        content
+      )
       setCustomContentText(content)
       setJsonText(JSON.stringify(generatedDeck, null, 2))
     } catch {
@@ -329,7 +338,7 @@ export default function App (): JSX.Element {
   async function handleImportPptx (file: File): Promise<void> {
     setIsImporting(true)
     try {
-      const { deck: importedDeck, warnings } = await parsePptxToJson(file)
+      const { presentation: importedDeck, warnings } = await parsePptxToJson(file)
       setJsonText(JSON.stringify(importedDeck, null, 2))
       if (warnings.length) {
         alert(warnings.join('\n'))

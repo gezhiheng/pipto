@@ -15,7 +15,7 @@ export function MediaScopeSelector ({
   scopeKeyPrefix,
   onToggleAll,
   onToggleScope
-}: MediaScopeSelectorProps): JSX.Element {
+}: MediaScopeSelectorProps): React.JSX.Element {
   function handleToggleAllChange (event: ChangeEvent<HTMLInputElement>): void {
     onToggleAll(event.target.checked)
   }

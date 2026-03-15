@@ -16,3 +16,7 @@ declare module 'txml' {
   const txml: any
   export = txml
 }
+
+declare module 'txml/txml' {
+  export function parse(input: string): unknown
+}

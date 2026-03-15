@@ -26,7 +26,7 @@ export function ThemePresetSection ({
   fontColor,
   backgroundColor,
   onApplyThemePreset
-}: ThemePresetSectionProps): JSX.Element {
+}: ThemePresetSectionProps): React.JSX.Element {
   return (
     <div className='space-y-4'>
       <div className='flex flex-wrap items-center justify-between gap-2'>

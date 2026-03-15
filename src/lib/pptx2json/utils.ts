@@ -9,6 +9,11 @@ export type ExportedObjectMeta = {
   refId: string
 }
 
+type GradientStopInput = {
+  pos?: unknown
+  color?: string | null
+}
+
 export function toPx(value?: number | null): number | undefined {
   if (value === undefined || value === null) return undefined;
   return value * PT_TO_PX;
@@ -63,8 +68,11 @@ function mapGradient(value: any): FillGradient | undefined {
 
   const colors = Array.isArray(value.colors)
     ? value.colors
-        .filter((stop) => stop && typeof stop === 'object')
-        .map((stop) => ({
+        .filter(
+          (stop: unknown): stop is GradientStopInput =>
+            typeof stop === 'object' && stop !== null
+        )
+        .map((stop: GradientStopInput) => ({
           pos: parseGradientPosition(stop.pos),
           color: mapFillColor(stop.color) ?? '#FFFFFF'
         }))
