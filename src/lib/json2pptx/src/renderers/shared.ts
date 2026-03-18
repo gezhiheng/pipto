@@ -184,8 +184,12 @@ function clampOpacity(value?: number): number {
   return Math.min(1, Math.max(0, value));
 }
 
-function getOpacityRatio(value?: string): number | undefined {
-  if (!value) return undefined;
+function getOpacityRatio(value?: string | number): number | undefined {
+  if (value === undefined || value === null) return undefined;
+  if (typeof value === 'number') {
+    return value > 1 ? Math.min(1, Math.max(0, value / 100)) : Math.min(1, Math.max(0, value));
+  }
+
   const normalized = value.trim();
   if (!normalized) return undefined;
   if (normalized.endsWith("%")) {
@@ -398,7 +402,7 @@ export function getElementOpacity(value?: number): number {
   return clampOpacity(value);
 }
 
-export function getFilterOpacity(value?: string): number | undefined {
+export function getFilterOpacity(value?: string | number): number | undefined {
   return getOpacityRatio(value);
 }
 

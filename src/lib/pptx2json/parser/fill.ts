@@ -75,14 +75,7 @@ export async function getPicFill(type: any, node: any, warpObj: any) {
 
 export function getPicFillOpacity(node: any) {
   const aBlipNode = node['a:blip']
-
-  const aphaModFixNode = getTextByPathList(aBlipNode, ['a:alphaModFix', 'attrs'])
-  let opacity = 1
-  if (aphaModFixNode && aphaModFixNode['amt'] && aphaModFixNode['amt'] !== '') {
-    opacity = parseInt(aphaModFixNode['amt']) / 100000
-  }
-
-  return opacity
+  return getBlipOpacityRatio(aBlipNode) ?? 1
 }
 
 export function getPicFilters(node: any) {
@@ -91,7 +84,14 @@ export function getPicFilters(node: any) {
   const aBlipNode = node['a:blip']
   if (!aBlipNode) return null
 
-  const filters: Record<string, number> = {}
+  const filters: Record<string, number | string> = {}
+  const opacity = getBlipOpacityRatio(aBlipNode)
+  if (opacity !== undefined) {
+    filters.opacity = formatFilterPercent(opacity)
+  }
+  if (aBlipNode['a:grayscl']) {
+    filters.grayscale = '100%'
+  }
 
   // 从a:extLst中获取滤镜效果（Microsoft Office 2010+扩展）
   const extLstNode = aBlipNode['a:extLst']
@@ -113,7 +113,13 @@ export function getPicFilters(node: any) {
         if (effect['a14:saturation']) {
           const satAttr = getTextByPathList(effect, ['a14:saturation', 'attrs', 'sat'])
           if (satAttr) {
-            filters.saturation = parseInt(String(satAttr)) / 100000
+            const saturation = parseInt(String(satAttr)) / 100000
+            if (saturation <= 0) {
+              filters.grayscale = '100%'
+            }
+            else {
+              filters.saturation = saturation
+            }
           }
         }
 
@@ -161,17 +167,46 @@ export function getPicFilters(node: any) {
 export async function getBgPicFill(bgPr: any, sorce: any, warpObj: any) {
   const picBase64 = await getPicFill(sorce, bgPr['a:blipFill'], warpObj)
   const aBlipNode = bgPr['a:blipFill']['a:blip']
-
-  const aphaModFixNode = getTextByPathList(aBlipNode, ['a:alphaModFix', 'attrs'])
-  let opacity = 1
-  if (aphaModFixNode && aphaModFixNode['amt'] && aphaModFixNode['amt'] !== '') {
-    opacity = parseInt(aphaModFixNode['amt']) / 100000
-  }
+  const opacity = getBlipOpacityRatio(aBlipNode) ?? 1
 
   return {
     picBase64,
     opacity,
   }
+}
+
+function getBlipOpacityRatio(aBlipNode: any): number | undefined {
+  if (!aBlipNode) return undefined
+
+  const alphaNodes = Array.isArray(aBlipNode['a:alphaModFix'])
+    ? aBlipNode['a:alphaModFix']
+    : aBlipNode['a:alphaModFix']
+      ? [aBlipNode['a:alphaModFix']]
+      : []
+
+  if (!alphaNodes.length) return undefined
+
+  let opacity = 1
+  let hasOpacity = false
+  for (const alphaNode of alphaNodes) {
+    const amt = alphaNode?.attrs?.amt
+    if (amt === undefined || amt === '') continue
+
+    const parsed = parseInt(String(amt), 10)
+    if (!Number.isFinite(parsed)) continue
+
+    opacity *= parsed / 100000
+    hasOpacity = true
+  }
+
+  return hasOpacity ? opacity : undefined
+}
+
+function formatFilterPercent(value: number): string {
+  const percent = Math.max(0, Math.min(100, value * 100))
+  const rounded = Math.round(percent * 1000) / 1000
+  const normalized = Number.isInteger(rounded) ? rounded.toFixed(0) : String(rounded)
+  return `${normalized}%`
 }
 
 export function getGradientFill(node: any, warpObj: any) {

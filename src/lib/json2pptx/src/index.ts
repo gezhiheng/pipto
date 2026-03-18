@@ -11,6 +11,7 @@ import {
   applyShapeFillPatch,
   fillRequiresXmlPatch
 } from "./renderers/fill-patch";
+import { applyImageFilterPatch } from "./renderers/image-patch";
 import { applyPptxLayout } from "./renderers/layout";
 import {
   addImageElement,
@@ -19,7 +20,7 @@ import {
   addTableElement,
   addTextElement
 } from "./renderers/elements";
-import { type FillPatch } from "./renderers/types";
+import { type FillPatch, type ImageFilterPatch } from "./renderers/types";
 
 type PresentationDocument = ReturnType<typeof parseDocument>;
 
@@ -54,6 +55,7 @@ export async function createPPTX(
 
   const pptx = new PptxGenJS();
   const fillPatches: FillPatch[] = [];
+  const imageFilterPatches: ImageFilterPatch[] = [];
 
   const width = parsedPresentation.width;
   const height = parsedPresentation.height;
@@ -86,7 +88,7 @@ export async function createPPTX(
         textPadding,
         fillPatches
       );
-      await addImageElement(slide, element, ratioPx2Inch);
+      await addImageElement(slide, element, ratioPx2Inch, slideIndex, elementIndex, imageFilterPatches);
       addShapeElement(
         slide,
         element,
@@ -107,7 +109,7 @@ export async function createPPTX(
     compression: true
   })) as ArrayBuffer;
 
-  if (!fillPatches.length) {
+  if (!fillPatches.length && !imageFilterPatches.length) {
     return { blob: new Blob([pptxBuffer]), fileName };
   }
 
@@ -173,6 +175,23 @@ export async function createPPTX(
     slideCache.set(slideNumber, nextSlideXml);
   }
 
+  for (const patch of imageFilterPatches) {
+    const slideNumber = patch.slideIndex + 1;
+    const slidePath = `ppt/slides/slide${slideNumber}.xml`;
+    const slideXml =
+      slideCache.get(slideNumber) ??
+      (zip.file(slidePath) ? await zip.file(slidePath)!.async("string") : "");
+
+    if (!slideXml) {
+      continue;
+    }
+
+    slideCache.set(
+      slideNumber,
+      applyImageFilterPatch(slideXml, patch.objectName, patch.filters)
+    );
+  }
+
   for (const [slideNumber, xml] of slideCache.entries()) {
     zip.file(`ppt/slides/slide${slideNumber}.xml`, xml);
   }
@@ -207,4 +226,4 @@ export type {
   TextContent,
   TextElement
 } from "./types/ppt";
-export * from "./type/fallback";
+export * from "./types/fallback";

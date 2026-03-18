@@ -1,0 +1,24 @@
+{
+  "type": "image",
+  "id": "OoWeIcEWjW",
+  "src": "https://images.pexels.com/photos/29928161/pexels-photo-29928161.jpeg?auto=compress&cs=tinysrgb&w=600",
+  "width": 665,
+  "height": 665,
+  "left": 540,
+  "top": -51.3,
+  "fixedRatio": true,
+  "rotate": 0,
+  "clip": {
+    "shape": "ellipse",
+    "range": [
+      [0, 0],
+      [100, 100]
+    ]
+  },
+  "filters": {
+    "grayscale": "100%",
+    "opacity": "100%"
+  },
+  "lock": true,
+  "imageType": "pageFigure"
+}

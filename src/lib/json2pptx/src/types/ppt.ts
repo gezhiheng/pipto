@@ -41,7 +41,11 @@ export type ElementOutline = {
 }
 
 export type ElementFilters = {
-  opacity?: string
+  opacity?: string | number
+  grayscale?: string | number
+  blur?: string | number
+  sepia?: string | number
+  saturate?: string | number
 }
 
 export type ElementClip = {

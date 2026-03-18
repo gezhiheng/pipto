@@ -22,4 +22,4 @@ export type {
   TemplateJsonSlide,
   TemplateJsonTheme
 } from './types'
-export * from './type/fallback'
+export * from './types/fallback'

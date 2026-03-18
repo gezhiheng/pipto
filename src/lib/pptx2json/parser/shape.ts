@@ -59,73 +59,92 @@ export function identifyShape(shapeData: any) {
 }
 
 function extractPathCommands(path: any) {
-  const commands: any[] = []
-  
-  const moveToList = normalizeToArray(path['a:moveTo'])
-  moveToList.forEach(moveTo => {
-    const pt = Array.isArray(moveTo?.['a:pt']) ? moveTo['a:pt'][0] : moveTo?.['a:pt']
-    if (pt) {
-      commands.push({
-        type: 'moveTo',
-        points: [{ x: parseInt(pt.attrs?.x) || 0, y: parseInt(pt.attrs?.y) || 0 }]
-      })
+  const orderedNodes = collectOrderedCommandNodes(path)
+
+  return orderedNodes.flatMap(({ type, node }) => {
+    switch (type) {
+      case 'moveTo': {
+        const pt = Array.isArray(node?.['a:pt']) ? node['a:pt'][0] : node?.['a:pt']
+        if (!pt) return []
+        return [{
+          type: 'moveTo',
+          points: [{ x: parseInt(pt.attrs?.x) || 0, y: parseInt(pt.attrs?.y) || 0 }]
+        }]
+      }
+      case 'lineTo': {
+        const pt = node?.['a:pt']
+        if (!pt) return []
+        return [{
+          type: 'lineTo',
+          points: [{ x: parseInt(pt.attrs?.x) || 0, y: parseInt(pt.attrs?.y) || 0 }]
+        }]
+      }
+      case 'cubicBezTo': {
+        const pts = normalizeToArray(node?.['a:pt'])
+        const points = pts.map(pt => ({
+          x: parseInt(pt.attrs?.x) || 0,
+          y: parseInt(pt.attrs?.y) || 0
+        }))
+        return points.length === 3 ? [{ type: 'cubicBezTo', points }] : []
+      }
+      case 'arcTo':
+        return [{
+          type: 'arcTo',
+          wR: parseInt(node?.attrs?.wR) || 0,
+          hR: parseInt(node?.attrs?.hR) || 0,
+          stAng: parseInt(node?.attrs?.stAng) || 0,
+          swAng: parseInt(node?.attrs?.swAng) || 0
+        }]
+      case 'quadBezTo': {
+        const pts = normalizeToArray(node?.['a:pt'])
+        const points = pts.map(pt => ({
+          x: parseInt(pt.attrs?.x) || 0,
+          y: parseInt(pt.attrs?.y) || 0
+        }))
+        return points.length ? [{ type: 'quadBezTo', points }] : []
+      }
+      case 'close':
+        return [{ type: 'close' }]
+      default:
+        return []
     }
   })
-
-  const lineToList = normalizeToArray(path['a:lnTo'])
-  lineToList.forEach(lnTo => {
-    const pt = lnTo['a:pt']
-    if (pt) {
-      commands.push({
-        type: 'lineTo',
-        points: [{ x: parseInt(pt.attrs?.x) || 0, y: parseInt(pt.attrs?.y) || 0 }]
-      })
-    }
-  })
-
-  const cubicList = normalizeToArray(path['a:cubicBezTo'])
-  cubicList.forEach(cubic => {
-    const pts = normalizeToArray(cubic['a:pt'])
-    const points = pts.map(pt => ({
-      x: parseInt(pt.attrs?.x) || 0,
-      y: parseInt(pt.attrs?.y) || 0
-    }))
-    if (points.length === 3) {
-      commands.push({ type: 'cubicBezTo', points })
-    }
-  })
-
-  const arcList = normalizeToArray(path['a:arcTo'])
-  arcList.forEach(arc => {
-    commands.push({
-      type: 'arcTo',
-      wR: parseInt(arc.attrs?.wR) || 0,
-      hR: parseInt(arc.attrs?.hR) || 0,
-      stAng: parseInt(arc.attrs?.stAng) || 0,
-      swAng: parseInt(arc.attrs?.swAng) || 0
-    })
-  })
-
-  const quadList = normalizeToArray(path['a:quadBezTo'])
-  quadList.forEach(quad => {
-    const pts = normalizeToArray(quad['a:pt'])
-    const points = pts.map(pt => ({
-      x: parseInt(pt.attrs?.x) || 0,
-      y: parseInt(pt.attrs?.y) || 0
-    }))
-    commands.push({ type: 'quadBezTo', points })
-  })
-
-  if (path['a:close']) {
-    commands.push({ type: 'close' })
-  }
-
-  return commands
 }
 
 function normalizeToArray(value: any) {
   if (!value) return []
   return Array.isArray(value) ? value : [value]
+}
+
+function collectOrderedCommandNodes(path: any) {
+  const commandNodes = [
+    ...toOrderedCommandEntries(path['a:moveTo'], 'moveTo'),
+    ...toOrderedCommandEntries(path['a:lnTo'], 'lineTo'),
+    ...toOrderedCommandEntries(path['a:cubicBezTo'], 'cubicBezTo'),
+    ...toOrderedCommandEntries(path['a:arcTo'], 'arcTo'),
+    ...toOrderedCommandEntries(path['a:quadBezTo'], 'quadBezTo'),
+    ...toOrderedCommandEntries(path['a:close'], 'close')
+  ]
+
+  return commandNodes.sort((left, right) => {
+    if (left.order !== right.order) return left.order - right.order
+    return left.index - right.index
+  })
+}
+
+function toOrderedCommandEntries(value: any, type: string) {
+  return normalizeToArray(value).map((node, index) => ({
+    type,
+    node,
+    index,
+    order: getNodeOrder(node)
+  }))
+}
+
+function getNodeOrder(node: any) {
+  const raw = node?.attrs?.order
+  const order = typeof raw === 'number' ? raw : parseInt(String(raw ?? ''), 10)
+  return Number.isFinite(order) ? order : Number.MAX_SAFE_INTEGER
 }
 
 function buildCustomShapeSegment(pathNode: any, w: number, h: number) {

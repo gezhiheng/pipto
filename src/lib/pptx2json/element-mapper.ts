@@ -202,7 +202,6 @@ export function normalizeElement(element: SlideElement): SlideElement {
   }
 
   if (element.type === "image") {
-    delete element.filters;
     delete element.imageType;
     delete element.outline;
   }
@@ -277,6 +276,7 @@ function mapBaseElement(raw: any, exportedMeta?: ReturnType<typeof parseExported
     rotate: raw.rotate,
     fill,
     opacity: raw.opacity,
+    filters: raw.filters,
     outline: outline ?? undefined,
     shadow: shadow ?? undefined,
     flipH: raw.isFlipH,

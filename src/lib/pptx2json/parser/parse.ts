@@ -51,9 +51,33 @@ export async function parse(file: ArrayBuffer): Promise<PptxParseResult> {
   }
 }
 
+function getNodeByLocalName(node, localName) {
+  if (!node || typeof node !== 'object') return undefined
+  if (node[localName] !== undefined) return node[localName]
+
+  for (const key of Object.keys(node)) {
+    if (key === localName || key.endsWith(':' + localName)) {
+      return node[key]
+    }
+  }
+
+  return undefined
+}
+
+function toNodeArray(node) {
+  if (node === undefined || node === null) return []
+  return Array.isArray(node) ? node : [node]
+}
+
+function getRelationshipArray(content) {
+  const relationshipsNode = getNodeByLocalName(content, 'Relationships')
+  return toNodeArray(getNodeByLocalName(relationshipsNode, 'Relationship'))
+}
+
 async function getContentTypes(zip) {
   const ContentTypesJson = await readXmlFile(zip, '[Content_Types].xml')
-  const subObj = ContentTypesJson['Types']['Override']
+  const typesNode = getNodeByLocalName(ContentTypesJson, 'Types')
+  const subObj = toNodeArray(getNodeByLocalName(typesNode, 'Override'))
   let slidesLocArray = []
   let slideLayoutsLocArray = []
 
@@ -96,19 +120,14 @@ async function getSlideInfo(zip) {
 
 async function getTheme(zip) {
   const preResContent = await readXmlFile(zip, 'ppt/_rels/presentation.xml.rels')
-  const relationshipArray = preResContent['Relationships']['Relationship']
+  const relationshipArray = getRelationshipArray(preResContent)
   let themeURI
 
-  if (relationshipArray.constructor === Array) {
-    for (const relationshipItem of relationshipArray) {
-      if (relationshipItem['attrs']['Type'] === 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme') {
-        themeURI = relationshipItem['attrs']['Target']
-        break
-      }
+  for (const relationshipItem of relationshipArray) {
+    if (relationshipItem['attrs']['Type'] === 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme') {
+      themeURI = relationshipItem['attrs']['Target']
+      break
     }
-  } 
-  else if (relationshipArray['attrs']['Type'] === 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme') {
-    themeURI = relationshipArray['attrs']['Target']
   }
 
   const themeContent = await readXmlFile(zip, 'ppt/' + themeURI)
@@ -129,8 +148,7 @@ async function getTheme(zip) {
 async function processSingleSlide(zip, sldFileName, themeContent, defaultTextStyle) {
   const resName = sldFileName.replace('slides/slide', 'slides/_rels/slide') + '.rels'
   const resContent = await readXmlFile(zip, resName)
-  let relationshipArray = resContent['Relationships']['Relationship']
-  if (relationshipArray.constructor !== Array) relationshipArray = [relationshipArray]
+  let relationshipArray = getRelationshipArray(resContent)
   
   let noteFilename = ''
   let layoutFilename = ''
@@ -200,8 +218,7 @@ async function processSingleSlide(zip, sldFileName, themeContent, defaultTextSty
   const slideLayoutTables = await indexNodes(slideLayoutContent)
   const slideLayoutResFilename = layoutFilename.replace('slideLayouts/slideLayout', 'slideLayouts/_rels/slideLayout') + '.rels'
   const slideLayoutResContent = await readXmlFile(zip, slideLayoutResFilename)
-  relationshipArray = slideLayoutResContent['Relationships']['Relationship']
-  if (relationshipArray.constructor !== Array) relationshipArray = [relationshipArray]
+  relationshipArray = getRelationshipArray(slideLayoutResContent)
 
   for (const relationshipArrayItem of relationshipArray) {
     const relType = relationshipArrayItem['attrs']['Type'].replace('http://schemas.openxmlformats.org/officeDocument/2006/relationships/', '')
@@ -226,8 +243,7 @@ async function processSingleSlide(zip, sldFileName, themeContent, defaultTextSty
   const slideMasterTables = indexNodes(slideMasterContent)
   const slideMasterResFilename = masterFilename.replace('slideMasters/slideMaster', 'slideMasters/_rels/slideMaster') + '.rels'
   const slideMasterResContent = await readXmlFile(zip, slideMasterResFilename)
-  relationshipArray = slideMasterResContent['Relationships']['Relationship']
-  if (relationshipArray.constructor !== Array) relationshipArray = [relationshipArray]
+  relationshipArray = getRelationshipArray(slideMasterResContent)
 
   for (const relationshipArrayItem of relationshipArray) {
     const relType = relationshipArrayItem['attrs']['Type'].replace('http://schemas.openxmlformats.org/officeDocument/2006/relationships/', '')
@@ -252,9 +268,8 @@ async function processSingleSlide(zip, sldFileName, themeContent, defaultTextSty
     const themeResFileName = themeFilename.replace(themeName, '_rels/' + themeName) + '.rels'
     const themeResContent = await readXmlFile(zip, themeResFileName)
     if (themeResContent) {
-      relationshipArray = themeResContent['Relationships']['Relationship']
+      relationshipArray = getRelationshipArray(themeResContent)
       if (relationshipArray) {
-        if (relationshipArray.constructor !== Array) relationshipArray = [relationshipArray]
         for (const relationshipArrayItem of relationshipArray) {
           themeResObj[relationshipArrayItem['attrs']['Id']] = {
             'type': relationshipArrayItem['attrs']['Type'].replace('http://schemas.openxmlformats.org/officeDocument/2006/relationships/', ''),
@@ -283,8 +298,7 @@ async function processSingleSlide(zip, sldFileName, themeContent, defaultTextSty
     }
     const digramResContent = await readXmlFile(zip, diagramResFileName)
     if (digramResContent) {
-      relationshipArray = digramResContent['Relationships']['Relationship']
-      if (relationshipArray.constructor !== Array) relationshipArray = [relationshipArray]
+      relationshipArray = getRelationshipArray(digramResContent)
       for (const relationshipArrayItem of relationshipArray) {
         diagramResObj[relationshipArrayItem['attrs']['Id']] = {
           'type': relationshipArrayItem['attrs']['Type'].replace('http://schemas.openxmlformats.org/officeDocument/2006/relationships/', ''),

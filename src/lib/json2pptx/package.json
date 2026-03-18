@@ -1,6 +1,6 @@
 {
   "name": "json2pptx",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "Convert JSON slide definitions to PPTX using PptxGenJS.",
   "homepage": "https://json2pptx.henryge.com/",
   "repository": {
@@ -42,7 +42,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "json2pptx-schema": "0.2.2",
+    "json2pptx-schema": "0.2.3",
     "jszip": "^3.10.1",
     "pptxgenjs": "^4.0.1",
     "svg-arc-to-cubic-bezier": "^3.2.0",

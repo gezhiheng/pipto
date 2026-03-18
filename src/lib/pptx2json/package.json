@@ -1,6 +1,6 @@
 {
   "name": "ppt2json",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "Convert PPTX files to json2pptx-compatible JSON.",
   "license": "MIT",
   "homepage": "https://json2pptx.henryge.com/",
@@ -38,16 +38,19 @@
   "scripts": {
     "build": "tsup",
     "dev:watch": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
-    "json2pptx-schema": "0.2.2",
+    "json2pptx-schema": "0.2.3",
     "jszip": "^3.10.1"
   },
   "devDependencies": {
     "@types/node": "^25.5.0",
     "tsup": "^8.5.1",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.0"
   }
 }

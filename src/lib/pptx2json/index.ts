@@ -83,4 +83,4 @@ function normalizeThemeColor(color: string): string {
 }
 
 export type { PresentationData, PresentationTheme, Slide, SlideElement } from './types'
-export * from './type/fallback'
+export * from './types/fallback'

@@ -6,9 +6,10 @@ import { toPoints } from "../svgPathParser";
 import { getElementRange, getLineElementPath } from "../element";
 import { DEFAULT_FONT_FACE, DEFAULT_FONT_SIZE } from "./constants";
 import { fillRequiresXmlPatch } from "./fill-patch";
+import { imageFiltersRequireXmlPatch } from "./image-patch";
 import { formatPoints } from "./points";
 import { getLineArrowType, isBase64Image } from "./utils";
-import { type FillPatch } from "./types";
+import { type FillPatch, type ImageFilterPatch } from "./types";
 import {
   buildTableRows,
   formatColor,
@@ -94,15 +95,20 @@ export function addTextElement(
 export async function addImageElement(
   slide: PptxGenJS.Slide,
   element: SlideElement,
-  ratioPx2Inch: number
+  ratioPx2Inch: number,
+  slideIndex: number,
+  elementIndex: number,
+  imageFilterPatches: ImageFilterPatch[]
 ): Promise<void> {
   if (element.type !== "image" || !element.src) return;
 
+  const objectName = `image-${slideIndex}-${element.id ?? elementIndex}`;
   const options: PptxGenJS.ImageProps = {
     x: (element.left ?? 0) / ratioPx2Inch,
     y: (element.top ?? 0) / ratioPx2Inch,
     w: (element.width ?? 0) / ratioPx2Inch,
-    h: (element.height ?? 0) / ratioPx2Inch
+    h: (element.height ?? 0) / ratioPx2Inch,
+    objectName
   };
 
   if (isBase64Image(element.src)) options.data = element.src;
@@ -111,11 +117,9 @@ export async function addImageElement(
   if (element.flipH) options.flipH = element.flipH;
   if (element.flipV) options.flipV = element.flipV;
   if (element.rotate) options.rotate = element.rotate;
-  const filterOpacity = getFilterOpacity(element.filters?.opacity) ?? 1;
   const elementOpacity = getElementOpacity(element.opacity);
-  const imageOpacity = filterOpacity * elementOpacity;
-  if (imageOpacity !== 1) {
-    options.transparency = (1 - imageOpacity) * 100;
+  if (elementOpacity !== 1) {
+    options.transparency = (1 - elementOpacity) * 100;
   }
   if (element.clip?.range) {
     if (element.clip.shape === "ellipse") options.rounding = true;
@@ -140,6 +144,15 @@ export async function addImageElement(
   }
 
   slide.addImage(options);
+
+  if (imageFiltersRequireXmlPatch(element.filters)) {
+    imageFilterPatches.push({
+      kind: "image",
+      slideIndex,
+      objectName,
+      filters: element.filters
+    });
+  }
 }
 
 export function addShapeElement(

@@ -21,6 +21,9 @@ export const toPoints = (d: string) => {
   let pathData: any
   try {
     pathData = new SVGPathData(d)
+      .toAbs()
+      .normalizeST()
+      .normalizeHVZ(false)
   } catch {
     return []
   }
