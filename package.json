@@ -1,7 +1,7 @@
 {
   "name": "pipto",
   "private": true,
-  "version": "0.2.1",
+  "version": "1.0.0",
   "description": "Pipto is a JSON-native presentation workspace with a marketing website, an interactive playground, and publishable packages for schema validation, PPTX export/import, preview, and theme transforms.",
   "type": "module",
   "scripts": {
