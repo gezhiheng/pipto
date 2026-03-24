@@ -198,14 +198,18 @@ export function FeatureCard ({
         )}
         aria-hidden='true'
       />
-      <div className={cx('inline-grid h-12 w-12 place-items-center rounded-2xl border border-white/88 bg-white/80 shadow-panel [&>svg]:h-6 [&>svg]:w-6', featureIconClassNames[tone])}>
-        <FeatureIcon name={icon} />
+      <div className='relative z-10 flex h-full flex-col'>
+        <div className={cx('inline-grid h-12 w-12 place-items-center rounded-2xl border border-white/88 bg-white/80 shadow-panel [&>svg]:h-6 [&>svg]:w-6', featureIconClassNames[tone])}>
+          <FeatureIcon name={icon} />
+        </div>
+        <h3 className={cx('mt-4 font-sans leading-[1.02] font-black tracking-[-0.05em] text-home-ink break-keep', titleClassName)}>
+          {title}
+        </h3>
+        <div className='mt-4 max-w-[58ch] leading-[1.75] text-home-copy'>
+          {body}
+        </div>
+        {children ? <div className='mt-7'>{children}</div> : null}
       </div>
-      <h3 className={cx('mt-4 font-sans leading-[1.02] font-black tracking-[-0.05em] text-home-ink [word-break:keep-all]', titleClassName)}>
-        {title}
-      </h3>
-      <div className='mt-4 max-w-[58ch] leading-[1.75] text-home-copy'>{body}</div>
-      {children}
     </article>
   )
 }

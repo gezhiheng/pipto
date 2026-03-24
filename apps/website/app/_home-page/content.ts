@@ -56,8 +56,8 @@ export const workflowSteps = [
   },
   {
     step: '2',
-    title: 'Preview / Transform',
-    body: '预览 PPTX，并执行主题替换和模板适配'
+    title: 'Preview / Custom',
+    body: '预览 PPT，并执行风格化和主题修改'
   },
   {
     step: '3',
