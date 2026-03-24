@@ -212,36 +212,35 @@ export function FeatureCard ({
 
 export function TransformArrowIcon () {
   return (
-    <span className='inline-flex h-[0.56em] w-[0.96em] translate-y-[0.03em] items-center justify-center' aria-hidden='true'>
-      <svg viewBox="0 0 72 36" aria-hidden="true">
+    <span
+      className='inline-flex h-[0.6em] w-[1.04em] shrink-0 translate-y-[0.03em] items-center justify-center leading-none text-home-ember max-[560px]:h-[0.56em] max-[560px]:w-[0.98em]'
+      aria-hidden='true'
+    >
+      <svg className='block h-full w-full overflow-visible' viewBox="0 0 72 36" fill="none" aria-hidden="true">
         <path
           d="M4 11h47"
-          fill="none"
-          stroke="var(--home-ember)"
+          stroke="currentColor"
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeWidth="4"
         />
         <path
           d="m42 4 9 7-9 7"
-          fill="none"
-          stroke="var(--home-ember)"
+          stroke="currentColor"
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeWidth="4"
         />
         <path
           d="M68 25H21"
-          fill="none"
-          stroke="var(--home-ember)"
+          stroke="currentColor"
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeWidth="4"
         />
         <path
           d="m30 18-9 7 9 7"
-          fill="none"
-          stroke="var(--home-ember)"
+          stroke="currentColor"
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeWidth="4"

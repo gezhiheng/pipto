@@ -1,5 +1,4 @@
-import { heroCoverJsonSnippet } from '../../lib/hero-cover-slide'
-import { HeroCoverPreview } from '../hero-cover-preview'
+import { HomePageHeroVisual } from './home-page-hero-visual'
 import {
   createFooterLinks,
   docsHref,
@@ -14,7 +13,6 @@ import {
   cx,
   FeatureCard,
   glassPanelClass,
-  HighlightedJsonSnippet,
   HomePageLink,
   primaryButtonClass,
   secondaryButtonClass,
@@ -85,10 +83,10 @@ function HomePageHero ({
   return (
     <section className='grid min-h-[calc(100svh-118px)] grid-cols-[minmax(0,0.95fr)_minmax(420px,0.98fr)] items-center gap-[clamp(40px,5vw,76px)] py-[34px] pb-28 max-[1180px]:grid-cols-1 max-[760px]:min-h-0 max-[760px]:py-[18px] max-[760px]:pb-[86px]'>
       <div className='animate-rise-in'>
-        <h1 className='mt-5.5 max-w-[7.2ch] font-sans text-[clamp(3.9rem,8vw,6.7rem)] leading-[0.92] font-black tracking-[-0.05em] text-home-ink-strong break-keep max-[760px]:text-[clamp(3.05rem,16vw,4.7rem)]'>
+        <h1 className='mt-5.5 max-w-[7.2ch] font-sans text-[clamp(3.9rem,8vw,6.7rem)] leading-[0.92] font-black tracking-[-0.05em] text-home-ink-strong break-keep max-[760px]:text-[clamp(2.8rem,14vw,4.25rem)] max-[560px]:text-[clamp(2.34rem,13.2vw,3.3rem)] max-[560px]:leading-[0.96]'>
           结构优先
           <br />
-          <span className='inline-flex items-center gap-[0.18em] whitespace-nowrap'>
+          <span className='inline-flex items-center gap-[0.18em] whitespace-nowrap max-[560px]:gap-[0.14em]'>
             <span>JSON</span>
             <TransformArrowIcon />
             <span>PPTX</span>
@@ -111,26 +109,7 @@ function HomePageHero ({
         </div>
       </div>
 
-      <div className='animate-[rise_0.7s_ease-out_80ms_both] relative min-h-[560px] max-[1180px]:min-h-[620px] max-[760px]:min-h-[540px] max-[560px]:min-h-[500px]' aria-label='封面 JSON 与预览'>
-        <div className={cx(glassPanelClass, 'absolute left-0 top-0 w-[min(436px,78%)] rounded-[30px] p-[22px] pb-6 max-[760px]:w-full max-[560px]:rounded-[24px] max-[560px]:p-[18px]')}>
-          <div className='mb-5 flex items-center justify-between gap-3 border-b border-[rgba(217,210,199,0.8)] pb-3'>
-            <span className='font-mono text-[0.7rem] text-home-subtle'>presentation.json</span>
-            <div className='flex gap-[7px]' aria-hidden='true'>
-              <span className='h-2 w-2 rounded-full bg-[rgba(215,83,70,0.52)]' />
-              <span className='h-2 w-2 rounded-full bg-[rgba(224,108,97,0.38)]' />
-              <span className='h-2 w-2 rounded-full bg-[rgba(61,77,179,0.36)]' />
-            </div>
-          </div>
-
-          <HighlightedJsonSnippet code={heroCoverJsonSnippet} />
-        </div>
-
-        <div className={cx(glassPanelClass, 'absolute bottom-0 right-0 w-[min(490px,84%)] rounded-[30px] p-4 max-[760px]:w-[calc(100%-20px)] max-[560px]:rounded-[24px] max-[560px]:p-3')}>
-          <div className='relative aspect-[16/9] overflow-hidden rounded-[24px] border border-white/85 bg-white'>
-            <HeroCoverPreview />
-          </div>
-        </div>
-      </div>
+      <HomePageHeroVisual />
     </section>
   )
 }
@@ -381,8 +360,8 @@ function HomePageFooter ({
 }) {
   return (
     <footer className='border-t border-white/70 bg-white/42 backdrop-blur-[18px]'>
-      <div className={cx(containerClass, 'flex min-h-[100px] items-center justify-between gap-6 max-[920px]:flex-col max-[920px]:justify-center max-[920px]:py-7')}>
-        <div className='inline-flex items-center gap-2.5 font-display text-[1.02rem] font-extrabold tracking-[-0.06em] text-home-ink-strong'>
+      <div className={cx(containerClass, 'flex min-h-25 items-center justify-between gap-6 max-[920px]:flex-col max-[920px]:justify-center max-[920px]:py-7')}>
+        <div className='inline-flex items-center gap-2.5 font-display text-[1.02rem] font-extrabold text-home-ink-strong'>
           <img className='h-7 w-7 shrink-0' src='/favicon.svg' alt='' aria-hidden='true' />
           <span>Pipto</span>
         </div>
