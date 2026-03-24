@@ -307,7 +307,7 @@ function FeatureRoundTripVisual () {
 function FeaturePreviewVisual () {
   return (
     <div
-      className='overflow-hidden rounded-[24px] border border-[rgba(217,210,199,0.92)] bg-[linear-gradient(180deg,rgba(255,255,255,0.84),rgba(247,244,239,0.94))] shadow-panel'
+      className='overflow-hidden rounded-[24px] border border-[rgba(217,210,199,0.92)] bg-[linear-gradient(180deg,rgba(255,255,255,0.84),rgba(247,244,239,0.94))]'
       aria-hidden='true'
     >
       <div className='p-4'>
