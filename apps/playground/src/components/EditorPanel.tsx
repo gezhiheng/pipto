@@ -122,7 +122,7 @@ export function EditorPanel ({
         onChange={handleCustomContentFileChange}
       />
       <div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
-        <h2 className='font-display text-lg text-ink-900'>Deck JSON</h2>
+        <h2 className='font-display text-lg text-ink-900'>JSON Editor</h2>
         <div className='flex flex-wrap items-center gap-2'>
           <Button
             variant='secondary'
