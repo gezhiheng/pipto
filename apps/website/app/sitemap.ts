@@ -15,15 +15,19 @@ export default async function sitemap (): Promise<MetadataRoute.Sitemap> {
       priority: 1
     },
     ...docs.map((doc) => ({
-      url: `https://pipto.henryge.com/docs/${doc.slug}`,
+      url: doc.slug === 'pipto'
+        ? 'https://pipto.henryge.com/docs'
+        : `https://pipto.henryge.com/docs/${doc.slug}`,
       lastModified,
       changeFrequency: 'weekly' as const,
       priority: 0.8
     })),
     ...docs
-      .filter((doc) => doc.hasChineseReadme && doc.hasEnglishReadme)
+      .filter((doc) => doc.hasChineseReadme)
       .map((doc) => ({
-        url: `https://pipto.henryge.com/docs/${doc.slug}/en`,
+        url: doc.slug === 'pipto'
+          ? 'https://pipto.henryge.com/docs/zh'
+          : `https://pipto.henryge.com/docs/${doc.slug}/zh`,
         lastModified,
         changeFrequency: 'monthly' as const,
         priority: 0.6

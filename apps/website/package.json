@@ -7,15 +7,17 @@
     "build": "next build"
   },
   "dependencies": {
+    "@fumadocs/mdx-remote": "^1.4.6",
+    "fumadocs-core": "15.6.2",
+    "fumadocs-ui": "15.6.2",
     "next": "^15.5.2",
     "pptx-previewer": "workspace:*",
     "react": "^19.2.4",
-    "react-dom": "^19.2.4",
-    "react-markdown": "^10.1.0",
-    "remark-gfm": "^4.0.1"
+    "react-dom": "^19.2.4"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.2.2",
+    "@types/mdx": "^2.0.13",
     "@types/node": "^25.5.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",

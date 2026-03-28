@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { JetBrains_Mono, Noto_Sans_SC, Unbounded } from 'next/font/google'
 import type { ReactNode } from 'react'
+import { NextProvider } from 'fumadocs-core/framework/next'
+import { RootProvider } from 'fumadocs-ui/provider'
 import './globals.css'
 
 const brand = Unbounded({
@@ -64,7 +66,20 @@ export default function RootLayout ({
 }>) {
   return (
     <html lang="zh-CN" className={`${brand.variable} ${body.variable} ${mono.variable}`}>
-      <body>{children}</body>
+      <body>
+        <NextProvider>
+          <RootProvider
+            search={{
+              enabled: false
+            }}
+            theme={{
+              enabled: false
+            }}
+          >
+            {children}
+          </RootProvider>
+        </NextProvider>
+      </body>
     </html>
   )
 }
