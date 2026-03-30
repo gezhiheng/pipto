@@ -286,7 +286,7 @@ function FeatureRoundTripVisual () {
           <span>JSON</span>
           <span>Schema</span>
         </div>
-        <div className='mt-3 rounded-[16px] bg-[rgba(61,77,179,0.06)] p-3 font-mono text-[0.72rem] leading-[1.7] text-home-copy'>
+        <div className='mt-3 rounded-2xl bg-[rgba(61,77,179,0.06)] p-3 font-mono text-[0.72rem] leading-[1.7] text-home-copy'>
           <span className='block text-home-slate'>{'{'} "slides": [</span>
           <span className='block pl-3'>{'{'} "type": <span className='text-home-ember'>"title"</span>,</span>
           <span className='block pl-3'><span className='text-home-slate'>"theme"</span>: <span className='text-home-ember'>"a"</span></span>
@@ -299,41 +299,20 @@ function FeatureRoundTripVisual () {
 
 function FeaturePreviewVisual () {
   return (
-    <div
-      className='overflow-hidden rounded-3xl border border-[rgba(217,210,199,0.92)] bg-[linear-gradient(180deg,rgba(255,255,255,0.84),rgba(247,244,239,0.94))]'
-      aria-hidden='true'
-    >
-      <div className='p-4'>
-        <div className='grid gap-3 min-[560px]:grid-cols-[minmax(0,1fr)_118px]'>
-          <div className='rounded-[18px] border border-[rgba(217,210,199,0.82)] bg-white/88 p-4'>
-            <span className='block h-3 w-[46%] rounded-full bg-[rgba(79,70,63,0.2)]' />
-            <div className='mt-4 grid grid-cols-[1.04fr_0.96fr] gap-3'>
-              <span className='h-20 rounded-[14px] bg-[linear-gradient(165deg,rgba(61,77,179,0.24),rgba(255,255,255,0.92))]' />
-              <div className='space-y-2.5'>
-                <span className='block h-2.5 w-full rounded-full bg-[rgba(79,70,63,0.14)]' />
-                <span className='block h-2.5 w-[84%] rounded-full bg-[rgba(61,77,179,0.28)]' />
-                <span className='block h-2.5 w-[66%] rounded-full bg-[rgba(224,108,97,0.26)]' />
-              </div>
-            </div>
-            <div className='mt-4 grid grid-cols-3 gap-2.5'>
-              <span className='h-11 rounded-[12px] bg-[rgba(61,77,179,0.08)]' />
-              <span className='h-11 rounded-[12px] bg-[rgba(224,108,97,0.08)]' />
-              <span className='h-11 rounded-[12px] bg-[rgba(111,122,84,0.08)]' />
-            </div>
-          </div>
-
-          <div className='rounded-[18px] border border-[rgba(217,210,199,0.82)] bg-[rgba(61,77,179,0.05)] p-3.5'>
-            <p className='text-[0.68rem] font-bold tracking-[0.08em] text-home-muted'>Checks</p>
-            <div className='mt-3 space-y-2.5'>
-              {['标题层级', '图片边距', '文本溢出'].map((label, index) => (
-                <div key={label} className='flex items-center gap-2'>
-                  <span className={cx('h-2.5 w-2.5 rounded-full', index === 2 ? 'bg-[rgba(224,108,97,0.52)]' : 'bg-[rgba(61,77,179,0.48)]')} />
-                  <span className='text-[0.72rem] font-bold text-home-copy'>{label}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+    <div className='rounded-[18px] border border-[rgba(217,210,199,0.82)] bg-white/88 p-4'>
+      <span className='block h-3 w-[46%] rounded-full bg-[rgba(79,70,63,0.2)]' />
+      <div className='mt-4 grid grid-cols-[1.04fr_0.96fr] gap-3'>
+        <span className='h-20 rounded-[14px] bg-[linear-gradient(165deg,rgba(61,77,179,0.24),rgba(255,255,255,0.92))]' />
+        <div className='space-y-2.5'>
+          <span className='block h-2.5 w-full rounded-full bg-[rgba(79,70,63,0.14)]' />
+          <span className='block h-2.5 w-[84%] rounded-full bg-[rgba(61,77,179,0.28)]' />
+          <span className='block h-2.5 w-[66%] rounded-full bg-[rgba(224,108,97,0.26)]' />
         </div>
+      </div>
+      <div className='mt-4 grid grid-cols-3 gap-2.5'>
+        <span className='h-11 rounded-xl bg-[rgba(61,77,179,0.08)]' />
+        <span className='h-11 rounded-xl bg-[rgba(224,108,97,0.08)]' />
+        <span className='h-11 rounded-xl bg-[rgba(111,122,84,0.08)]' />
       </div>
     </div>
   )
@@ -440,10 +419,10 @@ function HomePageCta ({
   playgroundHref: string
 }) {
   return (
-    <section className='pb-[132px] max-[760px]:pb-24'>
+    <section className='pb-33 max-[760px]:pb-24'>
       <div className={cx(glassPanelClass, 'relative overflow-hidden rounded-[36px] px-8 py-[72px] max-[760px]:rounded-[28px] max-[760px]:p-6 animate-rise-in')}>
         <div
-          className='absolute -bottom-[180px] -left-20 h-[340px] w-[340px] rounded-full bg-[rgba(224,108,97,0.24)] blur-[90px]'
+          className='absolute -bottom-45 -left-20 h-85 w-85 rounded-full bg-[rgba(224,108,97,0.24)] blur-[90px]'
           aria-hidden='true'
         />
         <div
