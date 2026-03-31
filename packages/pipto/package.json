@@ -1,6 +1,6 @@
 {
   "name": "@henryge/pipto",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Unified entrypoint for Pipto schema, export, import, preview, and customization packages.",
   "license": "MIT",
   "homepage": "https://pipto.henryge.com/",
