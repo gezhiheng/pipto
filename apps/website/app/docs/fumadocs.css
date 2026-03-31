@@ -141,7 +141,7 @@ header[role='banner'] {
   /* Tighten the gap so the mobile sub-nav overlaps the outline edge */
   #nd-subnav {
     margin-top: 0rem;
-    margin-bottom: -4rem;
+    margin-bottom: -8rem;
     position: sticky;
     top: 0;
     z-index: 15;
